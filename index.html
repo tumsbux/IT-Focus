@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Hub — เตือนใจ พาณิชย์ กรุ๊ป</title>
+  <style>
+    :root {
+      --primary:   #4361ee;
+      --primary-d: #3a0ca3;
+      --red:       #e63946;
+      --yellow:    #f4a261;
+      --green:     #2a9d8f;
+      --blue-lt:   #e8ecff;
+      --bg:        #f4f6f9;
+      --card:      #ffffff;
+      --border:    #e8ecf0;
+      --text:      #1a1a2e;
+      --muted:     #888;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .topbar {
+      background: linear-gradient(135deg, var(--primary-d), var(--primary));
+      color: white; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(67,97,238,.35);
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 12px; }
+    .topbar-brand .logo { font-size: 26px; }
+    .topbar-brand h1 { font-size: 17px; font-weight: 800; letter-spacing: -.3px; }
+    .topbar-brand span { font-size: 11px; opacity: .75; display: block; margin-top: 1px; }
+    .topbar-date { font-size: 12px; opacity: .8; }
+
+    /* ── ALERT BANNER ── */
+    .alert-banner {
+      background: var(--red); color: white;
+      padding: 10px 32px; display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 600;
+    }
+    .alert-banner.hidden { display: none; }
+
+    /* ── HERO ── */
+    .hero {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 32px 32px 24px;
+    }
+    .hero h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .hero p  { font-size: 13px; color: var(--muted); }
+    .stat-row {
+      display: flex; gap: 14px; margin-top: 20px; flex-wrap: wrap;
+    }
+    .stat-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 18px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600;
+    }
+    .stat-chip .n { font-size: 22px; font-weight: 800; line-height: 1; }
+    .s-red   .n { color: var(--red); }
+    .s-yellow .n { color: var(--yellow); }
+    .s-green  .n { color: var(--green); }
+    .s-blue   .n { color: var(--primary); }
+
+    /* ── GRID ── */
+    main { padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
+
+    .section-title {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); margin-bottom: 14px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px; margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      transition: box-shadow .15s, transform .15s;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .card:hover {
+      box-shadow: 0 6px 20px rgba(67,97,238,.12);
+      transform: translateY(-2px);
+    }
+    .card.urgent { border-left: 4px solid var(--red); }
+    .card.warn   { border-left: 4px solid var(--yellow); }
+    .card.ok     { border-left: 4px solid var(--green); }
+    .card.dev    { border-left: 4px solid var(--primary); }
+
+    .card-top { display: flex; align-items: center; gap: 10px; }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .ci-red    { background: #fde8ea; }
+    .ci-yellow { background: #fff3e0; }
+    .ci-green  { background: #e0f5f2; }
+    .ci-blue   { background: var(--blue-lt); }
+    .ci-purple { background: #ede8ff; }
+
+    .card-name { font-size: 14px; font-weight: 700; line-height: 1.2; }
+    .card-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .card-desc { font-size: 12px; color: #555; line-height: 1.5; }
+
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .badge {
+      font-size: 10px; font-weight: 800; padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .b-red    { background: #fde8ea; color: var(--red); }
+    .b-yellow { background: #fff3e0; color: var(--yellow); }
+    .b-green  { background: #e0f5f2; color: var(--green); }
+    .b-blue   { background: var(--blue-lt); color: var(--primary); }
+    .b-gray   { background: #f0f2f5; color: var(--muted); }
+
+    .card-arrow {
+      font-size: 18px; color: var(--border);
+      transition: color .15s, transform .15s;
+    }
+    .card:hover .card-arrow { color: var(--primary); transform: translateX(3px); }
+
+    /* ── QUICK LINKS ── */
+    .link-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px;
+    }
+    .qlink {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; color: var(--text);
+      text-decoration: none;
+      transition: background .15s, border-color .15s;
+    }
+    .qlink:hover { background: var(--blue-lt); border-color: var(--primary); color: var(--primary); }
+
+    /* ── ALERTS ── */
+    .alert-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+    .alert-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .alert-item.a-red    { border-left: 3px solid var(--red); background: #fff8f8; }
+    .alert-item.a-yellow { border-left: 3px solid var(--yellow); background: #fffbf0; }
+    .alert-item.a-green  { border-left: 3px solid var(--green); background: #f0faf8; }
+    .alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .ad-red  { background: var(--red); }
+    .ad-yellow { background: var(--yellow); }
+    .ad-green  { background: var(--green); }
+    .alert-body .t { font-size: 13px; font-weight: 600; }
+    .alert-body .m { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 16px 32px;
+      text-align: center; font-size: 11px; color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      .topbar, .hero, main { padding-left: 16px; padding-right: 16px; }
+      .stat-row { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="logo">🏪</div>
+    <div>
+      <h1>IT Hub — เตือนใจ พาณิชย์ กรุ๊ป</h1>
+      <span>ทีม Development & IT Support</span>
+    </div>
+  </div>
+  <div class="topbar-date" id="dateLabel"></div>
+</header>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner" id="alertBanner">
+  🚨 มี Ticket รอรับงาน! — ในลึก 088 ใบกำกับภาษีตัวเล็กเกิน &nbsp;·&nbsp; IT Report 16–18 พ.ค.
+</div>
+
+<!-- HERO STATS -->
+<div class="hero">
+  <h2>ภาพรวมระบบวันนี้</h2>
+  <p>ติดตาม WMS · POS · QA App · IT Ticket · Odoo ครบในที่เดียว</p>
+  <div class="stat-row">
+    <div class="stat-chip s-red">
+      <div><div class="n">1</div><div style="font-size:10px;color:#888">🔴 Needs Action</div></div>
+    </div>
+    <div class="stat-chip s-yellow">
+      <div><div class="n">11</div><div style="font-size:10px;color:#888">🟡 Follow-up</div></div>
+    </div>
+    <div class="stat-chip s-green">
+      <div><div class="n">23</div><div style="font-size:10px;color:#888">✅ Resolved</div></div>
+    </div>
+    <div class="stat-chip s-blue">
+      <div><div class="n">25 พ.ค.</div><div style="font-size:10px;color:#888">🔵 Load Test</div></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ── SYSTEMS ── -->
+  <div class="section-title">🖥️ ระบบหลัก</div>
+  <div class="card-grid">
+
+    <a href="#" class="card ok">
+      <div class="card-top">
+        <div class="card-icon ci-blue">🎯</div>
+        <div>
+          <div class="card-name">Today's Status</div>
+          <div class="card-sub">Dashboard ติดตามปัญหาทุกกลุ่ม</div>
+        </div>
+      </div>
+      <div class="card-desc">สรุป WMS · POS · QA App · IT Ticket อัพเดทจากไฟล์ LINE export และ IT Report</div>
+      <div class="card-footer">
+        <span class="badge b-red">🔴 1 ค้าง</span>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+    <a href="#" class="card dev">
+      <div class="card-top">
+        <div class="card-icon ci-purple">📋</div>
+        <div>
+          <div class="card-name">แอปประเมินร้าน</div>
+          <div class="card-sub">QA Store Evaluation App</div>
+        </div>
+      </div>
+      <div class="card-desc">ระบบประเมินสาขา · Auto Draft Save · รองรับแนบรูปภาพ · Filter สาขา/เขต/ภาค</div>
+      <div class="card-footer">
+        <span class="badge b-green">✅ Running</span>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+    <a href="#" class="card warn">
+      <div class="card-top">
+        <div class="card-icon ci-yellow">📊</div>
+        <div>
+          <div class="card-name">QA Dashboard</div>
+          <div class="card-sub">รายงานคะแนนประเมินสาขา</div>
+        </div>
+      </div>
+      <div class="card-desc">Dashboard แสดงผลคะแนนสาขา · กราฟแนวโน้ม · Filter ระดับภาค/เขต — รอ CEO approve scope</div>
+      <div class="card-footer">
+        <span class="badge b-yellow">🟡 In Design</span>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+    <a href="#" class="card ok">
+      <div class="card-top">
+        <div class="card-icon ci-green">🖨️</div>
+        <div>
+          <div class="card-name">POS System</div>
+          <div class="card-sub">ระบบขายหน้าร้าน</div>
+        </div>
+      </div>
+      <div class="card-desc">ตีบิล · ใบกำกับภาษี · Cash+Transfer payment · โพสโมบาย · ปิดการขาย</div>
+      <div class="card-footer">
+        <span class="badge b-yellow">🟡 2 Follow-up</span>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+    <a href="#" class="card warn">
+      <div class="card-top">
+        <div class="card-icon ci-blue">🖥️</div>
+        <div>
+          <div class="card-name">WMS / Auto System</div>
+          <div class="card-sub">ระบบ Warehouse + Odoo</div>
+        </div>
+      </div>
+      <div class="card-desc">ใบเบิก · DM · WHR · Odoo linking · รอบเบิก · สต๊อคสาขา</div>
+      <div class="card-footer">
+        <span class="badge b-yellow">🟡 4 Follow-up</span>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+    <a href="#" class="card urgent">
+      <div class="card-top">
+        <div class="card-icon ci-red">🎫</div>
+        <div>
+          <div class="card-name">IT Ticket System</div>
+          <div class="card-sub">ระบบแจ้งปัญหา OA</div>
+        </div>
+      </div>
+      <div class="card-desc">ผู้รับงาน: ศรายุทธ · ณภัทร · 16–18 พ.ค.: 5 tickets · 1 รอรับงาน · 2 กำลังดำเนินการ</div>
+      <div class="card-footer">
+        <span class="badge b-red">🔴 1 รอรับงาน</span>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── QUICK LINKS ── -->
+  <div class="section-title">⚡ Quick Links</div>
+  <div class="link-row">
+    <a href="#" class="qlink">📌 LINE กลุ่ม WMS/Auto</a>
+    <a href="#" class="qlink">🖨️ LINE กลุ่ม POS/Web Dev</a>
+    <a href="#" class="qlink">📋 LINE กลุ่ม QA App</a>
+    <a href="#" class="qlink">🎫 IT Ticket OA</a>
+    <a href="#" class="qlink">🗂️ Dimwarehouse Reference</a>
+    <a href="#" class="qlink">📊 IT Report Excel</a>
+    <a href="#" class="qlink">🏢 Odoo ERP</a>
+    <a href="#" class="qlink">📦 WMS Portal</a>
+  </div>
+
+  <!-- ── LATEST ALERTS ── -->
+  <div class="section-title">🔔 แจ้งเตือนล่าสุด</div>
+  <div class="alert-list">
+
+    <div class="alert-item a-red">
+      <div class="alert-dot ad-red"></div>
+      <div class="alert-body">
+        <div class="t">🎫 Ticket รอรับงาน — ในลึก 088 ใบกำกับภาษีตัวเล็กเกิน</div>
+        <div class="m">17 พ.ค. 16:12 · _.manow._ TJ088 M · ยังไม่มีผู้รับผิดชอบ</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-yellow">
+      <div class="alert-dot ad-yellow"></div>
+      <div class="alert-body">
+        <div class="t">🖥️ WMS — WHC บิลขายซ้ำ สต๊อคตัดออกซ้ำ สาขาไชยา + ปากพนัง</div>
+        <div class="m">16 พ.ค. · ศรายุทธ กำลังตรวจสอบ</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-yellow">
+      <div class="alert-dot ad-yellow"></div>
+      <div class="alert-body">
+        <div class="t">📋 QA Dashboard — รอ CEO decide scope · siriluk ส่ง requirements ใหม่</div>
+        <div class="m">18 พ.ค. · Aloha_jose ส่ง spec · ตั้ม: "ไปคุยกับ CEO ใหม่"</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-yellow">
+      <div class="alert-dot ad-yellow"></div>
+      <div class="alert-body">
+        <div class="t">🖥️ WMS — แอม TJ179 + สาขาบางขัน สร้างรอบเบิกผิด (เช้าเป็นบ่าย)</div>
+        <div class="m">17 พ.ค. · Sarayut: แจ้งทางคลังให้แก้ — ยังไม่ยืนยัน</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-yellow">
+      <div class="alert-dot ad-yellow"></div>
+      <div class="alert-body">
+        <div class="t">🔵 Load Test 25 พ.ค. — ทุกสาขาทำแบบประเมินพร้อมกัน</div>
+        <div class="m">15 พ.ค. · siriluk แจ้งวันที่ · เตรียม server รองรับ concurrent users</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-green">
+      <div class="alert-dot ad-green"></div>
+      <div class="alert-body">
+        <div class="t">✅ ปิดการขายไม่ได้ 5 สาขา (TJ129/TJ69/TJ29/TJ042/TJ123) — แก้แล้ว</div>
+        <div class="m">15 พ.ค. · Sarayut refresh แก้แล้วใน ~20 นาที</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-green">
+      <div class="alert-dot ad-green"></div>
+      <div class="alert-body">
+        <div class="t">✅ QA App — Auto Draft Save Deploy เรียบร้อย</div>
+        <div class="m">14 พ.ค. · บิ๊กเอง · บันทึก draft อัตโนมัติเมื่อปิดหน้าโดยไม่ได้กด save</div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  เตือนใจ พาณิชย์ กรุ๊ป จำกัด · ทีม Development &amp; IT Support · อัพเดทล่าสุด: 18 พฤษภาคม 2569
+  &nbsp;·&nbsp; <a href="#" style="color:var(--primary);text-decoration:none;">Today's Status ↗</a>
+</footer>
+
+<script>
+  // Set date
+  const d = new Date();
+  const th = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const m = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('dateLabel').textContent =
+    `วัน${th[d.getDay()]}ที่ ${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear() + 543}`;
+
+  // Hide alert banner if no urgent
+  // (keep visible for now — red ticket is open)
+</script>
+
+</body>
+</html>
