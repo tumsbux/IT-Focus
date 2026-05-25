@@ -1,0 +1,11 @@
+# LINE chat exports (sensitive)
+[LINE]*.txt
+
+# Excel files (sensitive)
+*.xlsx
+
+# Misc
+*.csv
+*.pptx
+Thumbs.db
+.DS_Store
