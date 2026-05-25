@@ -192,8 +192,8 @@
 </header>
 
 <!-- ALERT BANNER -->
-<div class="alert-banner" id="alertBanner">
-  🚨 มี Ticket รอรับงาน! — ในลึก 088 ใบกำกับภาษีตัวเล็กเกิน &nbsp;·&nbsp; IT Report 16–18 พ.ค.
+<div class="alert-banner hidden" id="alertBanner">
+  ✅ ไม่มีงานด่วนค้าง — อัพเดท 25 พ.ค. 2569
 </div>
 
 <!-- HERO STATS -->
@@ -202,16 +202,16 @@
   <p>ติดตาม WMS · POS · QA App · IT Ticket · Odoo ครบในที่เดียว</p>
   <div class="stat-row">
     <div class="stat-chip s-red">
-      <div><div class="n">1</div><div style="font-size:10px;color:#888">🔴 Needs Action</div></div>
+      <div><div class="n">0</div><div style="font-size:10px;color:#888">🔴 Needs Action</div></div>
     </div>
     <div class="stat-chip s-yellow">
-      <div><div class="n">11</div><div style="font-size:10px;color:#888">🟡 Follow-up</div></div>
+      <div><div class="n">2</div><div style="font-size:10px;color:#888">🟡 Follow-up</div></div>
     </div>
     <div class="stat-chip s-green">
-      <div><div class="n">23</div><div style="font-size:10px;color:#888">✅ Resolved</div></div>
+      <div><div class="n">15+</div><div style="font-size:10px;color:#888">✅ Resolved</div></div>
     </div>
     <div class="stat-chip s-blue">
-      <div><div class="n">25 พ.ค.</div><div style="font-size:10px;color:#888">🔵 Load Test</div></div>
+      <div><div class="n">7</div><div style="font-size:10px;color:#888">🔵 Feature Freeze</div></div>
     </div>
   </div>
 </div>
@@ -232,7 +232,7 @@
       </div>
       <div class="card-desc">สรุป WMS · POS · QA App · IT Ticket อัพเดทจากไฟล์ LINE export และ IT Report</div>
       <div class="card-footer">
-        <span class="badge b-red">🔴 1 ค้าง</span>
+        <span class="badge b-yellow">🟡 2 Follow-up</span>
         <span class="card-arrow">›</span>
       </div>
     </a>
@@ -277,7 +277,7 @@
       </div>
       <div class="card-desc">ตีบิล · ใบกำกับภาษี · Cash+Transfer payment · โพสโมบาย · ปิดการขาย</div>
       <div class="card-footer">
-        <span class="badge b-yellow">🟡 2 Follow-up</span>
+        <span class="badge b-yellow">🟡 1 Follow-up</span>
         <span class="card-arrow">›</span>
       </div>
     </a>
@@ -292,22 +292,22 @@
       </div>
       <div class="card-desc">ใบเบิก · DM · WHR · Odoo linking · รอบเบิก · สต๊อคสาขา</div>
       <div class="card-footer">
-        <span class="badge b-yellow">🟡 4 Follow-up</span>
+        <span class="badge b-yellow">🟡 1 Follow-up</span>
         <span class="card-arrow">›</span>
       </div>
     </a>
 
-    <a href="#" class="card urgent">
+    <a href="#" class="card ok">
       <div class="card-top">
-        <div class="card-icon ci-red">🎫</div>
+        <div class="card-icon ci-green">🎫</div>
         <div>
           <div class="card-name">IT Ticket System</div>
           <div class="card-sub">ระบบแจ้งปัญหา OA</div>
         </div>
       </div>
-      <div class="card-desc">ผู้รับงาน: ศรายุทธ · ณภัทร · 16–18 พ.ค.: 5 tickets · 1 รอรับงาน · 2 กำลังดำเนินการ</div>
+      <div class="card-desc">101 tickets เสร็จสิ้นทั้งหมด · ไม่มีงานค้าง · ไฟล์ล่าสุด: 23.xlsx</div>
       <div class="card-footer">
-        <span class="badge b-red">🔴 1 รอรับงาน</span>
+        <span class="badge b-green">✅ 0 ค้าง</span>
         <span class="card-arrow">›</span>
       </div>
     </a>
@@ -331,59 +331,67 @@
   <div class="section-title">🔔 แจ้งเตือนล่าสุด</div>
   <div class="alert-list">
 
-    <div class="alert-item a-red">
-      <div class="alert-dot ad-red"></div>
+    <div class="alert-item a-yellow">
+      <div class="alert-dot ad-yellow"></div>
       <div class="alert-body">
-        <div class="t">🎫 Ticket รอรับงาน — ในลึก 088 ใบกำกับภาษีตัวเล็กเกิน</div>
-        <div class="m">17 พ.ค. 16:12 · _.manow._ TJ088 M · ยังไม่มีผู้รับผิดชอบ</div>
+        <div class="t">📋 QA ดอนหว้า — รอผลยืนยันหลัง Load Test วันนี้</div>
+        <div class="m">25 พ.ค. · siriluk · ทุกสาขาทดสอบพร้อมกัน — รอ feedback</div>
       </div>
     </div>
 
     <div class="alert-item a-yellow">
       <div class="alert-dot ad-yellow"></div>
       <div class="alert-body">
-        <div class="t">🖥️ WMS — WHC บิลขายซ้ำ สต๊อคตัดออกซ้ำ สาขาไชยา + ปากพนัง</div>
-        <div class="m">16 พ.ค. · ศรายุทธ กำลังตรวจสอบ</div>
+        <div class="t">🖥️ WMS — ใบเบิกรอบผิด สาขาบางขัน + TJ179 · รอคลังยืนยัน</div>
+        <div class="m">23 พ.ค. · Sarayut แจ้งคลังแล้ว · ยังรอการยืนยันกลับ</div>
       </div>
     </div>
 
     <div class="alert-item a-yellow">
       <div class="alert-dot ad-yellow"></div>
       <div class="alert-body">
-        <div class="t">📋 QA Dashboard — รอ CEO decide scope · siriluk ส่ง requirements ใหม่</div>
-        <div class="m">18 พ.ค. · Aloha_jose ส่ง spec · ตั้ม: "ไปคุยกับ CEO ใหม่"</div>
-      </div>
-    </div>
-
-    <div class="alert-item a-yellow">
-      <div class="alert-dot ad-yellow"></div>
-      <div class="alert-body">
-        <div class="t">🖥️ WMS — แอม TJ179 + สาขาบางขัน สร้างรอบเบิกผิด (เช้าเป็นบ่าย)</div>
-        <div class="m">17 พ.ค. · Sarayut: แจ้งทางคลังให้แก้ — ยังไม่ยืนยัน</div>
-      </div>
-    </div>
-
-    <div class="alert-item a-yellow">
-      <div class="alert-dot ad-yellow"></div>
-      <div class="alert-body">
-        <div class="t">🔵 Load Test 25 พ.ค. — ทุกสาขาทำแบบประเมินพร้อมกัน</div>
-        <div class="m">15 พ.ค. · siriluk แจ้งวันที่ · เตรียม server รองรับ concurrent users</div>
+        <div class="t">🔵 Feature Freeze — อีก 7 วัน · เตรียม UAT ก่อน Go-live</div>
+        <div class="m">25 พ.ค. · deadline ปิด feature ใหม่ทั้งหมด · focus bug-fix only</div>
       </div>
     </div>
 
     <div class="alert-item a-green">
       <div class="alert-dot ad-green"></div>
       <div class="alert-body">
-        <div class="t">✅ ปิดการขายไม่ได้ 5 สาขา (TJ129/TJ69/TJ29/TJ042/TJ123) — แก้แล้ว</div>
-        <div class="m">15 พ.ค. · Sarayut refresh แก้แล้วใน ~20 นาที</div>
+        <div class="t">✅ OTP Login update — deploy เรียบร้อยแล้ว</div>
+        <div class="m">24 พ.ค. · บิ๊กเอง · ระบบ OTP ใหม่ทำงานปกติทุกสาขา</div>
       </div>
     </div>
 
     <div class="alert-item a-green">
       <div class="alert-dot ad-green"></div>
       <div class="alert-body">
-        <div class="t">✅ QA App — Auto Draft Save Deploy เรียบร้อย</div>
-        <div class="m">14 พ.ค. · บิ๊กเอง · บันทึก draft อัตโนมัติเมื่อปิดหน้าโดยไม่ได้กด save</div>
+        <div class="t">✅ QA App — ทำงานได้ 90%+ ทุกสาขา · Load Test ผ่าน</div>
+        <div class="m">25 พ.ค. · siriluk รายงาน · ยอดคะแนนสม่ำเสมอ</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-green">
+      <div class="alert-dot ad-green"></div>
+      <div class="alert-body">
+        <div class="t">✅ POS — Outage ปิดการขายไม่ได้ 5 สาขา แก้แล้ว</div>
+        <div class="m">23 พ.ค. · Sarayut · refresh แก้ใน 20 นาที · ไม่มีผลกับบิล</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-green">
+      <div class="alert-dot ad-green"></div>
+      <div class="alert-body">
+        <div class="t">✅ POS — Cash+Transfer payment feature deploy แล้ว</div>
+        <div class="m">22 พ.ค. · บิ๊กเอง · รองรับจ่ายผสม เงินสด + โอน</div>
+      </div>
+    </div>
+
+    <div class="alert-item a-green">
+      <div class="alert-dot ad-green"></div>
+      <div class="alert-body">
+        <div class="t">✅ IT Ticket — 101 tickets เสร็จสิ้นทั้งหมด · 0 ค้าง</div>
+        <div class="m">25 พ.ค. · ณภัทร + ศรายุทธ · ไฟล์: IT_Report_development_F 23.xlsx</div>
       </div>
     </div>
 
@@ -392,7 +400,7 @@
 </main>
 
 <footer>
-  เตือนใจ พาณิชย์ กรุ๊ป จำกัด · ทีม Development &amp; IT Support · อัพเดทล่าสุด: 18 พฤษภาคม 2569
+  เตือนใจ พาณิชย์ กรุ๊ป จำกัด · ทีม Development &amp; IT Support · อัพเดทล่าสุด: 25 พ.ค. 2569 · 08:04 น.
   &nbsp;·&nbsp; <a href="#" style="color:var(--primary);text-decoration:none;">Today's Status ↗</a>
 </footer>
 

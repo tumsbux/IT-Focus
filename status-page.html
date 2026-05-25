@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Status – Tumsbux_Invincible</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f4f6f9; color: #1a1a2e;
+    padding: 20px; font-size: 14px;
+  }
+  .header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .header h1 { font-size:22px; font-weight:700; }
+  .header .date { color:#666; font-size:13px; margin-top:2px; }
+  .refresh-btn { background:#4361ee; color:white; border:none; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; }
+
+  .today-banner { background:linear-gradient(135deg,#e63946,#c1121f); color:white; border-radius:12px; padding:12px 18px; margin-bottom:16px; display:flex; align-items:center; gap:10px; box-shadow:0 2px 8px rgba(230,57,70,.25); }
+  .today-banner .label { font-size:13px; font-weight:700; }
+  .today-banner .items { font-size:12px; opacity:.9; margin-top:2px; }
+
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:16px; }
+  .stat-card { background:white; border-radius:12px; padding:14px; border:1px solid #e8ecf0; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .stat-card .num { font-size:26px; font-weight:800; line-height:1; }
+  .stat-card .lbl { font-size:11px; color:#888; margin-top:3px; }
+  .c-red .num { color:#e63946; } .c-yellow .num { color:#f4a261; } .c-green .num { color:#2a9d8f; } .c-blue .num { color:#4361ee; } .c-teal .num { color:#0096c7; }
+  .stat-card.alert { border:2px solid #e63946; background:#fff8f8; }
+
+  .ticket-bar { background:white; border-radius:12px; border:1px solid #e8ecf0; padding:14px 18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .ticket-bar.has-open { border:2px solid #e63946; background:#fff8f8; }
+  .ticket-bar .t-icon { font-size:26px; }
+  .ticket-bar .t-info h3 { font-size:13px; font-weight:700; }
+  .ticket-bar .t-info p { font-size:12px; color:#666; margin-top:3px; }
+  .ticket-stats { display:flex; gap:12px; margin-left:auto; flex-wrap:wrap; }
+  .ts { text-align:center; } .ts .n { font-size:20px; font-weight:800; } .ts .l { font-size:10px; color:#888; }
+  .ts-green .n { color:#2a9d8f; } .ts-yellow .n { color:#f4a261; } .ts-red .n { color:#e63946; }
+
+  .columns { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .columns .section { margin-bottom:0; }
+  @media (max-width:680px) { .columns { grid-template-columns:1fr; } }
+
+  .section { background:white; border-radius:12px; border:1px solid #e8ecf0; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden; margin-bottom:14px; }
+  .sec-hdr { padding:12px 16px 8px; border-bottom:1px solid #f0f2f5; display:flex; align-items:center; gap:8px; }
+  .sec-hdr h2 { font-size:13px; font-weight:700; }
+  .sec-hdr .badge { margin-left:auto; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .b-red { background:#fde8ea; color:#e63946; } .b-yellow { background:#fff3e0; color:#f4a261; } .b-green { background:#e0f5f2; color:#2a9d8f; } .b-blue { background:#e8ecff; color:#4361ee; }
+
+  .issue-list { padding:2px 0; }
+  .issue { padding:9px 16px; border-bottom:1px solid #f6f7fa; display:flex; gap:10px; align-items:flex-start; }
+  .issue:last-child { border-bottom:none; }
+  .issue.hot { background:#fff8f8; border-left:3px solid #e63946; }
+  .issue.warn { background:#fffbf0; border-left:3px solid #f4a261; }
+  .issue.info { background:#f0f4ff; border-left:3px solid #4361ee; }
+
+  .dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .d-red { background:#e63946; } .d-yellow { background:#f4a261; } .d-green { background:#2a9d8f; } .d-blue { background:#4361ee; }
+
+  .ib { flex:1; min-width:0; }
+  .it { font-size:13px; font-weight:600; line-height:1.3; }
+  .im { font-size:11px; color:#999; margin-top:2px; }
+  .pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:20px; margin-top:4px; }
+  .p-red { background:#fde8ea; color:#e63946; } .p-yellow { background:#fff3e0; color:#f4a261; } .p-green { background:#e0f5f2; color:#2a9d8f; } .p-blue { background:#e8ecff; color:#4361ee; } .p-gray { background:#f0f2f5; color:#888; }
+
+  .nb { display:inline-block; font-size:9px; font-weight:800; padding:1px 5px; border-radius:4px; vertical-align:middle; margin-left:4px; color:white; }
+  .nb-red { background:#e63946; } .nb-green { background:#2a9d8f; } .nb-blue { background:#4361ee; } .nb-orange { background:#f4a261; }
+
+  .files-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; margin-bottom:14px; }
+  .doc-card { background:white; border-radius:12px; border:1px solid #e8ecf0; padding:12px 14px; display:flex; align-items:center; gap:10px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .doc-icon { font-size:26px; flex-shrink:0; }
+  .doc-info h3 { font-size:12px; font-weight:700; }
+  .doc-info p { font-size:11px; color:#888; margin-top:2px; }
+  .doc-tag { margin-left:auto; font-size:10px; font-weight:700; padding:3px 7px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+
+  .tl-section { background:white; border-radius:12px; border:1px solid #e8ecf0; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden; }
+  .tl-hdr { padding:12px 16px 8px; border-bottom:1px solid #f0f2f5; font-size:13px; font-weight:700; }
+  .tl { padding:4px 16px 10px; }
+  .tli { display:flex; gap:10px; padding:7px 0; border-left:2px solid #e8ecf0; padding-left:14px; margin-left:6px; position:relative; }
+  .tli::before { content:''; position:absolute; left:-5px; top:12px; width:8px; height:8px; border-radius:50%; background:#4361ee; border:2px solid white; box-shadow:0 0 0 1px #4361ee; }
+  .tli.r::before { background:#e63946; box-shadow:0 0 0 1px #e63946; }
+  .tli.y::before { background:#f4a261; box-shadow:0 0 0 1px #f4a261; }
+  .tli.g::before { background:#2a9d8f; box-shadow:0 0 0 1px #2a9d8f; }
+  .tl-date { font-size:10px; color:#bbb; min-width:80px; padding-top:2px; flex-shrink:0; }
+  .tl-text { font-size:12px; color:#333; line-height:1.4; }
+  .tl-text strong { color:#1a1a2e; }
+  .last-upd { text-align:right; font-size:11px; color:#bbb; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🎯 Today's Status</h1>
+    <div class="date">วันจันทร์ 18 พฤษภาคม 2569 · WMS · POS · QA App · IT Tickets</div>
+  </div>
+  <button class="refresh-btn" onclick="location.reload()">↻ Refresh</button>
+</div>
+
+<div class="today-banner">
+  <div style="font-size:22px">🚨</div>
+  <div>
+    <div class="label">🔴 Ticket ค้าง! — ในลึก 088 ใบกำกับภาษีตัวเล็กเกิน (17 พ.ค.) ยังไม่มีใครรับงาน · WMS บิลซ้ำ WHC สต๊อคติดลบ กำลังดำเนินการ</div>
+    <div class="items">QA: Dashboard scope รอ CEO · Yukyik_031 แก้แล้ว ✅ · POS F8 ต้นเหรียง แก้แล้ว ✅</div>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card c-red alert"><div class="num">1</div><div class="lbl">🔴 Needs Action</div></div>
+  <div class="stat-card c-yellow"><div class="num">11</div><div class="lbl">🟡 Follow-up</div></div>
+  <div class="stat-card c-green"><div class="num">23</div><div class="lbl">✅ Resolved (7d)</div></div>
+  <div class="stat-card c-teal"><div class="num">5</div><div class="lbl">🎫 Tickets ใหม่</div></div>
+  <div class="stat-card c-blue"><div class="num">1</div><div class="lbl">🔵 Upcoming</div></div>
+</div>
+
+<div class="ticket-bar has-open">
+  <div class="t-icon">🎫</div>
+  <div class="t-info">
+    <h3>IT_Report_development_all_2026-05-16_to_18.xlsx</h3>
+    <p>5 tickets (16–17 พ.ค.) · <strong style="color:#e63946">1 รอรับงาน</strong> · 2 กำลังดำเนินการ · 2 เสร็จสิ้น</p>
+  </div>
+  <div class="ticket-stats">
+    <div class="ts ts-green"><div class="n">2</div><div class="l">เสร็จสิ้น</div></div>
+    <div class="ts ts-yellow"><div class="n">2</div><div class="l">ดำเนินการ</div></div>
+    <div class="ts ts-red"><div class="n">1</div><div class="l">รอรับงาน</div></div>
+  </div>
+</div>
+
+<!-- Open Ticket Alert -->
+<div class="section" style="border:2px solid #e63946;">
+  <div class="sec-hdr" style="background:#fff0f0;">
+    <span style="font-size:16px">🚨</span>
+    <h2>Ticket รอรับงาน — ต้องดำเนินการ</h2>
+    <span class="badge b-red">1 ค้าง</span>
+  </div>
+  <div class="issue-list">
+    <div class="issue hot">
+      <div class="dot d-red"></div>
+      <div class="ib">
+        <div class="it">ในลึก 088 — ใบกำกับภาษีตัวเล็กเกิน <span class="nb nb-red">รอรับงาน</span></div>
+        <div class="im">17 พ.ค. 16:12 · _.manow._ TJ088 M · ยังไม่มีผู้รับผิดชอบ</div>
+        <span class="pill p-red">🔴 รอรับงาน</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Open Tickets in Progress -->
+<div class="section">
+  <div class="sec-hdr">
+    <span style="font-size:16px">⏳</span>
+    <h2>Ticket กำลังดำเนินการ</h2>
+    <span class="badge b-yellow">2 เคส</span>
+  </div>
+  <div class="issue-list">
+    <div class="issue warn">
+      <div class="dot d-yellow"></div>
+      <div class="ib">
+        <div class="it">WHC — บิลขายซ้ำ สต๊อคตัดออกซ้ำ ติดลบ (ไชยา + ปากพนัง)</div>
+        <div class="im">16 พ.ค. 13:47 · Ael Asset · ศรายุทธ รับงานแล้ว · ตอบ "กำลังตรวจสอบ"</div>
+        <span class="pill p-yellow">🟡 กำลังดำเนินการ</span>
+      </div>
+    </div>
+    <div class="issue warn">
+      <div class="dot d-yellow"></div>
+      <div class="ib">
+        <div class="it">ในลึก 088 — ใบกำกับภาษีออกไม่ครบ ไม่มีลายเซ็น</div>
+        <div class="im">16 พ.ค. 08:21 · _.manow._ TJ088 M · ศรายุทธ รับงาน · ตอบ "กำลังตรวจสอบ"</div>
+        <span class="pill p-yellow">🟡 กำลังดำเนินการ</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+
+  <div class="section">
+    <div class="sec-hdr">
+      <span style="font-size:16px">🖥️</span>
+      <h2>WMS / Auto System</h2>
+      <span class="badge b-yellow">4 รอติดตาม</span>
+    </div>
+    <div class="issue-list">
+
+      <div class="issue warn">
+        <div class="dot d-yellow"></div>
+        <div class="ib">
+          <div class="it">แอม TJ179 + สาขาบางขัน — สร้างรอบเบิกผิด (เช้า → บ่าย)</div>
+          <div class="im">17 พ.ค. · Sarayut บอกแจ้งทางคลังให้แก้ — ยังไม่ยืนยัน</div>
+          <span class="pill p-yellow">🟡 รอทางคลัง</span>
+        </div>
+      </div>
+
+      <div class="issue warn">
+        <div class="dot d-yellow"></div>
+        <div class="ib">
+          <div class="it">Zozine TJ108 — ตีบิลไม่ออกหลัง QR scan</div>
+          <div class="im">13 พ.ค. 19:28 · ตั้มบอก "ลองใหม่" — ยังไม่ยืนยันผล</div>
+          <span class="pill p-yellow">🟡 รอยืนยัน</span>
+        </div>
+      </div>
+
+      <div class="issue warn">
+        <div class="dot d-yellow"></div>
+        <div class="ib">
+          <div class="it">kannika026 TJ026 — ราคา promo ไม่ลด (8810000000321)</div>
+          <div class="im">13 พ.ค. 19:21 · ตั้มเช็ค + บอก "ลองใหม่" — ยังไม่ยืนยันผล</div>
+          <span class="pill p-yellow">🟡 รอยืนยัน</span>
+        </div>
+      </div>
+
+      <div class="issue warn">
+        <div class="dot d-yellow"></div>
+        <div class="ib">
+          <div class="it">ฝ้าย TJ192 — DM ข้ามเดือน รูปไม่ขึ้น</div>
+          <div class="im">5 พ.ค. · รอพี่แอลปรับ stock</div>
+          <span class="pill p-yellow">🟡 รอ พี่แอล</span>
+        </div>
+      </div>
+
+      <div class="issue">
+        <div class="dot d-green"></div>
+        <div class="ib">
+          <div class="it">TJ197 (อ่าวนาง) + TJ042 (โค่กบก) — ใบเบิกช้า <span class="nb nb-green">ใหม่</span></div>
+          <div class="im">17 พ.ค. · Sarayut/Napat ตรวจสอบ → ได้แล้ว ✅</div>
+          <span class="pill p-green">✅ แก้แล้ว</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-hdr">
+      <span style="font-size:16px">🖨️</span>
+      <h2>POS / Web Dev Technical</h2>
+      <span class="badge b-yellow">2 follow-up</span>
+    </div>
+    <div class="issue-list">
+
+      <div class="issue warn">
+        <div class="dot d-yellow"></div>
+        <div class="ib">
+          <div class="it">JANJAO TJ120 — ยกเลิก 3 ข้อความ</div>
+          <div class="im">16 พ.ค. · ไม่ทราบเนื้อหา — ควรเช็กว่ายังมีปัญหาอยู่ไหม</div>
+          <span class="pill p-yellow">🟡 ควรเช็ก</span>
+        </div>
+      </div>
+
+      <div class="issue warn">
+        <div class="dot d-yellow"></div>
+        <div class="ib">
+          <div class="it">Yanisa Am — ราคาขั้นบันไดติดลบ / null</div>
+          <div class="im">15 พ.ค. · Sarayut แก้ราคาแล้ว แต่ต้องแจ้งฝ่ายราคาเพิ่ม</div>
+          <span class="pill p-yellow">🟡 รอแจ้งฝ่ายราคา</span>
+        </div>
+      </div>
+
+      <div class="issue">
+        <div class="dot d-green"></div>
+        <div class="ib">
+          <div class="it">Yukyik_031 บ้านนาเดิม — โพสโมบาย ใบดึงเงินไม่ขึ้น <span class="nb nb-green">ใหม่</span></div>
+          <div class="im">16 พ.ค. · Ticket ปิดแล้ว · Sarayut: รายการดึงเงินอยู่ที่เครื่อง 2 (POS 2)</div>
+          <span class="pill p-green">✅ แก้แล้ว</span>
+        </div>
+      </div>
+
+      <div class="issue">
+        <div class="dot d-green"></div>
+        <div class="ib">
+          <div class="it">ต้นเหรียง 090 — กด F8 โอนเงินไม่ได้ <span class="nb nb-green">ใหม่</span></div>
+          <div class="im">16 พ.ค. 08:42 · ศรายุทธ ดำเนินการเสร็จสิ้น 09:45</div>
+          <span class="pill p-green">✅ แก้แล้ว</span>
+        </div>
+      </div>
+
+      <div class="issue">
+        <div class="dot d-green"></div>
+        <div class="ib">
+          <div class="it">ปิดการขายไม่ได้ — TJ129, TJ69, TJ29, TJ042, TJ123</div>
+          <div class="im">15 พ.ค. ค่ำ · Sarayut refresh แก้แล้ว</div>
+          <span class="pill p-green">✅ แก้แล้ว</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="section">
+  <div class="sec-hdr">
+    <span style="font-size:16px">📋</span>
+    <h2>พัฒนาโปรแกรมประเมินร้าน</h2>
+    <span class="badge b-yellow">3 follow-up · 1 upcoming</span>
+  </div>
+  <div class="issue-list">
+
+    <div class="issue info">
+      <div class="dot d-blue"></div>
+      <div class="ib">
+        <div class="it">Load Test 25 พ.ค. — ทุกสาขาทำแบบประเมินพร้อมกัน <span class="nb nb-blue">เตรียมตัว</span></div>
+        <div class="im">15 พ.ค. · siriluk แจ้งวันที่ · บิ๊กเอง รับทราบ ให้ลอง Auto Draft Save ก่อน</div>
+        <span class="pill p-blue">🔵 25 พ.ค. — Load Test</span>
+      </div>
+    </div>
+
+    <div class="issue warn">
+      <div class="dot d-yellow"></div>
+      <div class="ib">
+        <div class="it">Dashboard scope — รอ CEO decide <span class="nb nb-red">วันนี้</span></div>
+        <div class="im">18 พ.ค. · Aloha_jose ส่ง spec (ChatGPT canvas) + siriluk ส่งไฟล์ requirements · ตั้มบอก "ไปคุยกับ CEO"</div>
+        <span class="pill p-yellow">🟡 รอ CEO approve scope</span>
+      </div>
+    </div>
+
+    <div class="issue warn">
+      <div class="dot d-yellow"></div>
+      <div class="ib">
+        <div class="it">siriluk — แก้ไขQA เพิ่มเติม Dashbord (ไฟล์ xlsx) <span class="nb nb-orange">วันนี้</span></div>
+        <div class="im">18 พ.ค. · ส่งไฟล์ "แก้ไขQA เพิ่มเติม Dashbord 18052569 -.xlsx" ในกลุ่ม</div>
+        <span class="pill p-yellow">🟡 ควรเปิดอ่าน</span>
+      </div>
+    </div>
+
+    <div class="issue warn">
+      <div class="dot d-yellow"></div>
+      <div class="ib">
+        <div class="it">ภูธร 8 — สาขาใหม่ยังไม่อยู่ใน retail structure</div>
+        <div class="im">5 พ.ค. · รอ ฝ่าย บช เพิ่ม parent wmparwhs</div>
+        <span class="pill p-yellow">🟡 รอ ฝ่าย บช</span>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="dot d-green"></div>
+      <div class="ib">
+        <div class="it">เป็นเอก — รูปแนบในใบประเมินไม่ขึ้น</div>
+        <div class="im">15 พ.ค. · บิ๊กเอง อัพเดทรูปใหม่แล้ว ✅</div>
+        <span class="pill p-green">✅ แก้แล้ว</span>
+      </div>
+    </div>
+
+    <div class="issue">
+      <div class="dot d-green"></div>
+      <div class="ib">
+        <div class="it">✨ Feature "Auto Draft Save" Deploy แล้ว</div>
+        <div class="im">14 พ.ค. · บิ๊กเอง · บันทึก draft เมื่อปิดหน้าโดยไม่ได้กด save</div>
+        <span class="pill p-green">✅ Deploy เรียบร้อย</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="files-row">
+  <div class="doc-card" style="border:1px solid #e63946;">
+    <div class="doc-icon">🎫</div>
+    <div class="doc-info"><h3>IT_Report_development_all_2026-05-16_to_18.xlsx</h3><p>5 tickets · 1 รอรับงาน 🔴 · 2 กำลังดำเนินการ</p></div>
+    <div class="doc-tag" style="background:#fde8ea;color:#e63946;">🔴 มีค้าง</div>
+  </div>
+  <div class="doc-card">
+    <div class="doc-icon">🎫</div>
+    <div class="doc-info"><h3>IT_Report_development_F.xlsx</h3><p>60 tickets · 0 ค้าง · 14 พ.ค. ปิด 4 ใบ</p></div>
+    <div class="doc-tag" style="background:#e0f5f2;color:#2a9d8f;">✅ ไม่มีค้าง</div>
+  </div>
+  <div class="doc-card">
+    <div class="doc-icon">🗂️</div>
+    <div class="doc-info"><h3>Dimwarehouse.csv</h3><p>204 แถว · mapping สาขา → DM / RM / คลัง</p></div>
+    <div class="doc-tag" style="background:#e8ecff;color:#4361ee;">📂 Reference</div>
+  </div>
+</div>
+
+<div class="tl-section">
+  <div class="tl-hdr">📅 Timeline — วันนี้ + 7 วันล่าสุด</div>
+  <div class="tl">
+    <div class="tli r"><div class="tl-date">18 พ.ค. เช้า</div><div class="tl-text"><strong>IT:</strong> ในลึก 088 ใบกำกับฯ ตัวเล็กเกิน (17 พ.ค.) — <strong>ยังรอรับงาน!</strong></div></div>
+    <div class="tli y"><div class="tl-date">18 พ.ค. เช้า</div><div class="tl-text"><strong>QA App:</strong> Aloha_jose ส่ง spec + siriluk ส่ง requirements · ตั้มบอก <strong>"รอคุยกับ CEO"</strong></div></div>
+    <div class="tli g"><div class="tl-date">17 พ.ค. 11:06</div><div class="tl-text"><strong>WMS:</strong> TJ197 + TJ042 ใบเบิกช้า → แก้แล้ว ✅</div></div>
+    <div class="tli y"><div class="tl-date">17 พ.ค. 11:05</div><div class="tl-text"><strong>WMS:</strong> แอม TJ179 + บางขัน รอบเบิกผิด → <strong>รอทางคลัง</strong></div></div>
+    <div class="tli y"><div class="tl-date">16 พ.ค. 13:47</div><div class="tl-text"><strong>IT/WMS:</strong> WHC บิลขายซ้ำ สต๊อคติดลบ ไชยา+ปากพนัง → ศรายุทธ กำลังตรวจสอบ</div></div>
+    <div class="tli g"><div class="tl-date">16 พ.ค. 09:45</div><div class="tl-text"><strong>POS/IT:</strong> ต้นเหรียง 090 F8 โอนเงินไม่ได้ + Yukyik_031 ใบดึงเงิน → ศรายุทธ แก้แล้ว ✅</div></div>
+    <div class="tli g"><div class="tl-date">15 พ.ค. ค่ำ</div><div class="tl-text"><strong>POS:</strong> ปิดการขายไม่ได้ 5 สาขา → Sarayut refresh แก้แล้ว ✅</div></div>
+    <div class="tli g"><div class="tl-date">14 พ.ค.</div><div class="tl-text"><strong>QA App + IT:</strong> Auto Draft Save deploy ✅ · ปิด 4 tickets ✅</div></div>
+    <div class="tli r"><div class="tl-date">13 พ.ค. 19:21</div><div class="tl-text"><strong>WMS:</strong> Zozine TJ108 + kannika026 TJ026 → ตั้มบอกลองใหม่ <strong>รอยืนยัน</strong></div></div>
+  </div>
+</div>
+
+<div class="last-upd">📂 F:\claude co work (IT Report 16–18 พ.ค. อัพเดทแล้ว) · อัพเดทล่าสุด: 18 พ.ค. 2569</div>
+
+</body>
+</html>
